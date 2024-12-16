@@ -1,0 +1,60 @@
+Q3
+a) Det finns tre API programmeringsmodeller: polling, interrupt och DMA. Förklara
+vad som menas!
+
+ - polling: periodvis kontroll av en "flagga" (blocking or non-blocking)
+ - interrupt: event avbryter processor 
+ - DMA: (Direct Memory Access) hårdvara kan nå systemminne utan processor, lämplig när cpu inte kan hantera hastighet från överföring eller cpu behlver göra annat samtidigt vid långsam överföring
+ 
+ 
+b) Vad menas med att koden är reentrant?
+flera instanser kan köras concurrently safely, koden kan bli "reentered"
+
+
+c) Vad menas med att implementationer av HAL APIs kan anropa user-callback
+functions, dvs. vad innebär user-callback? 
+user defined functions "callbacks" som anropas av HAL-api för initialisering/deinitialisering av peripherals, när process slutförs (process complete) eller vid error.
+
+Q4
+microcontrollern kan klockas av
+ - intern klocka
+ - kristall på stm board (X3) (ej implementerad)
+ - extern kristall via pin 29 på c7 connector
+ 
+ (vårt board är konfigurerat för intern (MCO) 8MHz)
+ 
+Q5
+
+a) 
+GPIOx-MODER register måste modifieras "00" för input mode, "01" för output mode, ligger på address 0x4800 0C00 
+
+GPIOx-OTYPER måste modifieras när output mode väljs för att välja push-pull "0" eller open drain "1" (totalt 32 bits men bara de 16 första används)
+
+GPIOx-PUPDR måste modifieras för att bestämma intern pull-up eller pull down resistor
+totalt 32 bit, 2 bitar per pin, 00=ingen pullup/pulldown, 01=pullup, 10=pulldown, 11=reserved?
+
+GPIOD ligger på adresser 0x4800 0C00 - 0x4800 0FFF i minne vilket betyder att:
+GPIOD-MODER har address 0x4800 0C00 (offset 0x00)
+GPIOD-OTYPER har address 0x4800 0C04 (offset 0x04)
+GPIOD-PUPDR har address 0x4800 0C0C (offset 0x0C)
+
+b)
+ i) input with pull up:	
+ ii) input floating:	
+ iii) output push-pull:	n-mos and p-mos on depending on output
+ iv) output open drain:	p-mos is never activated, n-mos activates if output is "0"
+ 
+c) utgångspin max ström: 20mA
+
+d) ingångspin max spänning: 	FT pins: minimum supply voltage + 4.0V
+				TT pins: 4.0V
+
+e) matningsspänning: 1.71-3.6V
+ 
+
+
+ 
+
+ 
+
+

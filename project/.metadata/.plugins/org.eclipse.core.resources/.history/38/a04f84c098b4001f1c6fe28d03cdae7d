@@ -1,0 +1,69 @@
+
+
+
+/**
+ * @brief	:	definitions for shield_abstraction.c
+ * @author	:	Adam Strömbom
+ * @date	:	December 2024
+ */
+
+#include <stdint.h>
+#include "shield.h"
+
+typedef enum {
+	WEST,
+	SOUTH,
+	EAST,
+	NORTH
+} junction_position_t;
+
+typedef enum {
+	TRAFFIC_LIGHT,
+	PEDESTRIAN_LIGHT,
+} light_type_t;
+
+typedef enum {
+	RED,
+	YELLOW,
+	GREEN,
+	INDICATOR
+} light_color_t;
+
+typedef enum {
+	ON = 1,
+	OFF = 0
+} led_state_t;
+
+
+typedef struct traffic_light {
+	int8_t red;
+	int8_t yellow;
+	int8_t green;
+} traffic_light_t;
+
+typedef struct pedestrian_light {
+	int8_t red;
+	int8_t green;
+	int8_t indicator;
+} pedestrian_light_t;
+
+/*pedestrian crossings are included in all directions even though our traffic light shield only have at north and west crossing*/
+typedef struct fourway_junction{
+	traffic_light_t north_tl;
+	pedestrian_light_t north_pl;
+
+	traffic_light_t west_tl;
+	pedestrian_light_t west_pl;
+
+	traffic_light_t south_tl;
+	pedestrian_light_t south_pl;
+
+	traffic_light_t east_tl;
+	pedestrian_light_t east_pl;
+} fourway_junction_t ;
+
+
+void junction_init(fourway_junction_t* junction);
+int8_t update_lights(fourway_junction_t* junction);
+
+

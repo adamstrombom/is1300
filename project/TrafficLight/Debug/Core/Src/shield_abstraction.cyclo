@@ -1,0 +1,16 @@
+../Core/Src/shield_abstraction.c:11:6:led_registers_init	1
+../Core/Src/shield_abstraction.c:20:6:update_leds	1
+../Core/Src/shield_abstraction.c:30:8:traffic_state_init	1
+../Core/Src/shield_abstraction.c:47:6:check_car	9
+../Core/Src/shield_abstraction.c:76:6:set_led_all	3
+../Core/Src/shield_abstraction.c:94:6:set_led	5
+../Core/Src/shield_abstraction.c:116:6:north_leds	3
+../Core/Src/shield_abstraction.c:128:6:west_leds	3
+../Core/Src/shield_abstraction.c:140:6:south_leds	3
+../Core/Src/shield_abstraction.c:152:6:east_leds	3
+../Core/Src/shield_abstraction.c:167:6:north_traffic_light	16
+../Core/Src/shield_abstraction.c:222:6:west_traffic_light	16
+../Core/Src/shield_abstraction.c:276:6:south_traffic_light	16
+../Core/Src/shield_abstraction.c:330:6:east_traffic_light	16
+../Core/Src/shield_abstraction.c:385:6:north_pedestrian_light	16
+../Core/Src/shield_abstraction.c:439:6:west_pedestrian_light	16

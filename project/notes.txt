@@ -1,0 +1,46 @@
+
+
+
+1/12 
+
+---------------
+create project with pins enabled just for spi and shift registers
+
+attempt to write shift register init function
+
+write test for spi to shift register (leds turn on correctly)
+
+write spi to shift register function 
+
+test function with test
+----------------
+
+
+
+----------------
+interrupts from pedestrian buttons
+
+initialize buttons in gui
+
+(add user leds as well to demonstrate that interrupts work as intended)
+
+write test (how to test external interrupts, for now just turned on user led on interrupt)
+
+write functions and nvic callback
+---------------
+
+
+
+--------------------
+polling car switches work
+init switches in gui
+write test
+test
+-------------------
+
+
+
+
+
+
+

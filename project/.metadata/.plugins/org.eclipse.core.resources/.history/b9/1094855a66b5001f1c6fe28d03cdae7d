@@ -1,0 +1,4 @@
+
+
+
+void test_logic(led_registers_t* leds, traffic_state_t* traffic, SemaphoreHandle_t ledBlock, SemaphoreHandle_t  stateBlock);

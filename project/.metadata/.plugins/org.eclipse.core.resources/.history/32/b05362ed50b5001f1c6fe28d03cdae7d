@@ -1,0 +1,446 @@
+
+
+/**
+ *	@brief: functions for abstracting from the shield hardware logic into more human readable logic
+ *	@author: Adam Strömbom
+ */
+
+#include "shield_abstraction.h"
+
+
+void led_registers_init(led_registers_t* registers){
+	registers->sr1 = 0x00;
+	registers->sr2 = 0x00;
+	registers->sr3 = 0x00;
+}
+
+void update_leds(led_registers_t* registers){
+	uint8_t buf[3];
+
+	buf[0] = registers->sr3;
+	buf[1] = registers->sr2;
+	buf[2] = registers->sr1;
+	SR_Send(buf);
+}
+
+
+int8_t traffic_state_init(traffic_state_t* state){
+	state->north_pedestrian = false;
+	state->west_pedestrain = false;
+
+
+	return 0;
+}
+
+
+bool check_car(junction_position_t position){
+	return false;
+}
+
+void set_led_all(led_registers_t* leds, led_state_t led_state){
+	switch (led_state){
+		case ON:
+			leds->sr3 = 0xff;
+			leds->sr2 = 0xff;
+			leds->sr1 = 0xff;
+			break;
+		case OFF:
+			leds->sr3 = 0x00;
+			leds->sr2 = 0x00;
+			leds->sr1 = 0x00;
+			break;
+		default:
+			break;
+	}
+}
+
+void set_led(led_registers_t* leds, junction_position_t position, light_type_t light_type, light_color_t color, led_state_t led_state){
+
+	//reroute to help functions instead of indentation hell
+	switch (position){
+		case NORTH:
+			north_leds(leds, light_type, color, led_state);
+			break;
+		case WEST:
+			west_leds(leds, light_type, color, led_state);
+			break;
+		case SOUTH:
+			south_leds(leds, light_type, color, led_state);
+			break;
+		case EAST:
+			east_leds(leds, light_type, color, led_state);
+			break;
+		default:
+			break;
+	}
+}
+
+//help functions
+void north_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
+	switch (light_type){
+		case TRAFFIC_LIGHT:
+			north_traffic_light(leds, color, led_state);
+			break;
+		case PEDESTRIAN_LIGHT:
+			north_pedestrian_light(leds, color, led_state);
+			break;
+		default:
+			break;
+	}
+}
+void west_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
+	switch (light_type){
+		case TRAFFIC_LIGHT:
+			west_traffic_light(leds, color, led_state);
+			break;
+		case PEDESTRIAN_LIGHT:
+			west_pedestrian_light(leds, color, led_state);
+			break;
+		default:
+			break;
+	}
+}
+void south_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
+	switch (light_type){
+		case TRAFFIC_LIGHT:
+			south_traffic_light(leds, color, led_state);
+			break;
+		case PEDESTRIAN_LIGHT:
+			//do nothing (no pedestrian lights)
+			break;
+		default:
+			break;
+	}
+}
+void east_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
+	switch (light_type){
+		case TRAFFIC_LIGHT:
+			east_traffic_light(leds, color, led_state);
+			break;
+		case PEDESTRIAN_LIGHT:
+			//do nothing (no pedestrian lights)
+			break;
+		default:
+			break;
+	}
+}
+
+
+//more help functions
+void north_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL4_RED;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL4_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL4_YELLOW;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL4_YELLOW;
+					break;
+				default:
+					break;
+			}
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL4_GREEN;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL4_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			//do nothing (no indicator for traffic light)
+			break;
+		default:
+			break;
+	}
+}
+
+void west_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | TL1_RED;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~TL1_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | TL1_YELLOW;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~TL1_YELLOW;
+					break;
+				default:
+					break;
+			}
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | TL1_GREEN;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~TL1_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			//do nothing (no indicator for traffic light)
+			break;
+		default:
+			break;
+	}
+}
+void south_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | TL2_RED;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~TL2_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | TL2_YELLOW;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~TL2_YELLOW;
+					break;
+				default:
+					break;
+			}
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | TL2_GREEN;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~TL2_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			//do nothing (no indicator for traffic light)
+			break;
+		default:
+			break;
+	}
+}
+void east_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL3_RED;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL3_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL3_YELLOW;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL3_YELLOW;
+					break;
+				default:
+					break;
+			}
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr3 = leds->sr3 | TL3_GREEN;
+					break;
+				case OFF:
+					leds->sr3 = leds->sr3 & ~TL3_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			//do nothing (no indicator for traffic light)
+			break;
+		default:
+			break;
+	}
+}
+
+void north_pedestrian_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | PL2_RED;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~PL2_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			//do nothing
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | PL2_GREEN;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~PL2_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			switch (led_state){
+				case ON:
+					leds->sr2 = leds->sr2 | PL2_BLUE;
+					break;
+				case OFF:
+					leds->sr2 = leds->sr2 & ~PL2_BLUE;
+					break;
+				default:
+					break;
+			}
+			break;
+		default:
+			break;
+	}
+}
+void west_pedestrian_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
+	switch (color){
+		case RED:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | PL1_RED;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~PL1_RED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case YELLOW:
+			//do nothing
+			break;
+		case GREEN:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | PL1_GREEN;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~PL1_GREEN;
+					break;
+				default:
+					break;
+			}
+			break;
+		case INDICATOR:
+			switch (led_state){
+				case ON:
+					leds->sr1 = leds->sr1 | PL1_BLUE;
+					break;
+				case OFF:
+					leds->sr1 = leds->sr1 & ~PL1_BLUE;
+					break;
+				default:
+					break;
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+
+/**
+ *  @brief : initialize a traffic junction for the shield
+ *  @param : junction, pointer to a junction struct of type "fourway_junction_t"
+ */
+//void junction_init( fourway_junction_t* junction ){
+//
+//	/*North traffic light and crossing*/
+//	junction->north_tl.red = OFF;
+//	junction->north_tl.yellow = OFF;
+//	junction->north_tl.green = OFF;
+//
+//	junction->north_pl.red = OFF;
+//	junction->north_pl.green = OFF;
+//	junction->north_pl.indicator = OFF;
+//
+//	/*West traffic light and crossing*/
+//	junction->west_tl.red = OFF;
+//	junction->west_tl.yellow = OFF;
+//	junction->west_tl.green = OFF;
+//
+//	junction->west_pl.red = OFF;
+//	junction->west_pl.green = OFF;
+//	junction->west_pl.indicator = OFF;
+//
+//	/*South traffic light and crossing*/
+//	junction->south_tl.red = OFF;
+//	junction->south_tl.yellow = OFF;
+//	junction->south_tl.green = OFF;
+//
+//	junction->south_pl.red = OFF;
+//	junction->south_pl.green = OFF;
+//	junction->south_pl.indicator = OFF;
+//
+//	/*East traffic light and crossing*/
+//	junction->east_tl.red = OFF;
+//	junction->east_tl.yellow = OFF;
+//	junction->east_tl.green = OFF;
+//
+//	junction->east_pl.red = OFF;
+//	junction->east_pl.green = OFF;
+//	junction->east_pl.indicator = OFF;
+//}
+

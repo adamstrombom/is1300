@@ -1,0 +1,46 @@
+
+----------TASK1----------------------------
+Study the recorded trace. Think about what we are observing with this recording, and
+how it relates to the task model we discussed in the lecture.
+How often does a context switch occur between tasks?
+
+	Since they have the same prio, context switching will occur after a time quntum defined by the round robin algorithm usd by freertos
+	
+How long does it take to complete a task from the time it starts? With what period do
+the tasks run?
+
+	Blink1: Finished after max: 4.5ms		min: 2.5ms	period: 11-14ms
+	Blink2: Finished after max:	7.5ms	min:	6.5ms	period: 26-27ms
+	
+After using xDelayUntil(): blink1 period 10ms, blink2 period 20ms
+
+changing prio:
+Blink1 higher than Blink2
+	Blink 1 finished after 2.5ms and 2.5ms and Blink2 after 7.5ms
+	
+Blink1 same as Blink2
+	Blink 1 finished after 4.5ms and 2.5ms and Blink2 after 7.5ms
+	
+	
+Blink 1 lower than Blink2
+	Blink 1 finished after 7.5ms and 2.5ms and Blink2 after 5ms
+	
+
+Hyperperiod is 20ms since its the lowest common denominator
+
+Utilization: (2.5+5.0+2.5)/20 = 0.50 -> 50%
+
+Roughly 10ms idle time
+
+Both Blink1 and Blink2 can meet their deadlines.
+
+
+After blink3 is added:
+	blink3 should require roughly 3ms to execute (wait_cycles(250000))
+	
+	Blink1 is in risk of not being able to finish before deadline, at least as long its prio is the same or lower than blink2
+	
+Do all tasks Blink1(), Blink2() and UserButton() meet their deadline?
+	Yes, from the diagram it appears that they make their deadlines.
+	
+------------------------------------------------------------------------

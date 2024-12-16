@@ -1,0 +1,48 @@
+
+
+
+/**
+ * @brief	:	definitions for shield_abstraction.c
+ * @author	:	Adam Strömbom
+ * @date	:	December 2024
+ */
+
+#include <stdint.h>
+
+#define ON 1
+#define OFF 0
+
+enum Direction {
+	WEST,
+	SOUTH,
+	EAST,
+	NORTH
+};
+
+typedef struct traffic_light {
+	int8_t red;
+	int8_t yellow;
+	int8_t green;
+} traffic_light_t;
+
+typedef struct pedestrian_light {
+	int8_t red;
+	int8_t green;
+	int8_t indicator;
+} pedestrian_light_t;
+
+typedef struct fourway_junction{
+	traffic_light_t north_tl;
+	pedestrian_light_t north_pl;
+
+	traffic_light_t west_tl;
+	pedestrian_light_t west_pl;
+
+	traffic_light_t south_tl;
+	pedestrian_light_t south_pl;
+
+	traffic_light_t east_tl;
+	pedestrian_light_t east_pl;
+} fourway_junction_t ;
+
+

@@ -1,0 +1,6 @@
+../Core/Src/freertos.c:99:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:150:6:StartDefaultTask	16	static
+../Core/Src/freertos.c:168:6:Blink1	24	static
+../Core/Src/freertos.c:193:6:Blink2	24	static
+../Core/Src/freertos.c:218:6:Trigg	24	static
+../Core/Src/freertos.c:237:6:wait_cycles	24	static,ignoring_inline_asm
