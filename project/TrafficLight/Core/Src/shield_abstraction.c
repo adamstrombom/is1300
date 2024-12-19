@@ -1,12 +1,14 @@
 /**
- *	@brief: functions for abstracting from the shield hardware logic into more human readable logic
+ *	@brief: shield_abstraction.c, functions for abstracting from the shield hardware logic into more human readable logic
  *	@author: Adam Strömbom
  */
 
 #include "shield_abstraction.h"
 
 /**
- * @brief : initialization of led register struct
+ * @brief : led_registers_init, initialization of led register struct
+ * @param : led_registers_t* registers, pointer to led state object to be initialized
+ * @return : void
  */
 void led_registers_init(led_registers_t* registers){
 	registers->sr1 = 0x00;
@@ -15,7 +17,9 @@ void led_registers_init(led_registers_t* registers){
 }
 
 /**
- * @brief : re-package contents of a ledregister struct and send it to shift registers
+ * @brief : update_leds, re-package contents of a ledregister struct and send it to shift registers
+ * @param : led_registers_t* registers, pointer to led state object to be initialized
+ * @return : void
  */
 void update_leds(led_registers_t* registers){
 	uint8_t buf[3];
@@ -26,7 +30,11 @@ void update_leds(led_registers_t* registers){
 	SR_Send(buf);
 }
 
-
+/**
+ * @brief : traffic_state_init, initialization of a traffic state
+ * @params : traffic_state_t* state, pointer to the trafffic state to be initialized
+ * @return : int8_t, 0 if correctly initialized
+ */
 int8_t traffic_state_init(traffic_state_t* state){
 	state->north_pedestrian = false;
 	state->west_pedestrian = false;
@@ -40,7 +48,7 @@ int8_t traffic_state_init(traffic_state_t* state){
 }
 
 /**
- * @brief : check switch status at a given position in the junction
+ * @brief : check_car, check switch status at a given position in the junction
  * @param : junction_position_t position, position in junction
  * @return : boolean, true if switch active
  */
@@ -73,6 +81,13 @@ bool check_car(junction_position_t position){
 	return false;
 }
 
+
+/**
+ * @brief : 	set_led_all, set all leds to specified state of a specific led state object
+ * @param : 	led_registers_t* leds, pointer to led state object to modify
+ * 				led_state_t led_state, state to set ledst to (ON or OFF)
+ * @return : 	void
+ */
 void set_led_all(led_registers_t* leds, led_state_t led_state){
 	switch (led_state){
 		case ON:
@@ -90,7 +105,15 @@ void set_led_all(led_registers_t* leds, led_state_t led_state){
 	}
 }
 
-
+/**
+ * @brief	:	set_led, Set specific led of a specific led state object to ON or OFF, also able to toggle by passing TOGGLE
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				junction_position_t position, position in junction (NORTH, WEST, SOUTH, EAST)
+ * 				light_type_t light_type, type of traffic light, TRAFFIC_LIGHT for actual traffic light (for cars) and PEDESTRIAN_LIGHT for pedestrian crossing lights an indicator led
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void set_led(led_registers_t* leds, junction_position_t position, light_type_t light_type, light_color_t color, led_state_t led_state){
 
 	//reroute to help functions instead of indentation hell
@@ -112,7 +135,14 @@ void set_led(led_registers_t* leds, junction_position_t position, light_type_t l
 	}
 }
 
-//help functions
+/**
+ * @brief	:	help function for set_led(5), navigating closer to determine which led bit needs to be modified in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_type_t light_type, type of traffic light, TRAFFIC_LIGHT for actual traffic light (for cars) and PEDESTRIAN_LIGHT for pedestrian crossing lights an indicator led
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void north_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
 	switch (light_type){
 		case TRAFFIC_LIGHT:
@@ -125,6 +155,14 @@ void north_leds(led_registers_t* leds, light_type_t light_type, light_color_t co
 			break;
 	}
 }
+/**
+ * @brief	:	help function for set_led(5), navigating closer to determine which led bit needs to be modified in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_type_t light_type, type of traffic light, TRAFFIC_LIGHT for actual traffic light (for cars) and PEDESTRIAN_LIGHT for pedestrian crossing lights an indicator led
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void west_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
 	switch (light_type){
 		case TRAFFIC_LIGHT:
@@ -137,6 +175,14 @@ void west_leds(led_registers_t* leds, light_type_t light_type, light_color_t col
 			break;
 	}
 }
+/**
+ * @brief	:	help function for set_led(5), navigating closer to determine which led bit needs to be modified in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_type_t light_type, type of traffic light, TRAFFIC_LIGHT for actual traffic light (for cars) and PEDESTRIAN_LIGHT for pedestrian crossing lights an indicator led
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void south_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
 	switch (light_type){
 		case TRAFFIC_LIGHT:
@@ -149,6 +195,14 @@ void south_leds(led_registers_t* leds, light_type_t light_type, light_color_t co
 			break;
 	}
 }
+/**
+ * @brief	:	help function for set_led(5), navigating closer to determine which led bit needs to be modified in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_type_t light_type, type of traffic light, TRAFFIC_LIGHT for actual traffic light (for cars) and PEDESTRIAN_LIGHT for pedestrian crossing lights an indicator led
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void east_leds(led_registers_t* leds, light_type_t light_type, light_color_t color, led_state_t led_state){
 	switch (light_type){
 		case TRAFFIC_LIGHT:
@@ -163,7 +217,13 @@ void east_leds(led_registers_t* leds, light_type_t light_type, light_color_t col
 }
 
 
-//more help functions
+/**
+ * @brief	:	help function north_leds(4), navigating even closer to determine and modifying specific led bit of a TRAFFIC_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void north_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:
@@ -218,7 +278,13 @@ void north_traffic_light(led_registers_t* leds, light_color_t color, led_state_t
 			break;
 	}
 }
-
+/**
+ * @brief	:	help function west_leds(4), navigating even closer to determine and modifying specific led bit of a TRAFFIC_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void west_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:
@@ -273,6 +339,13 @@ void west_traffic_light(led_registers_t* leds, light_color_t color, led_state_t 
 			break;
 	}
 }
+/**
+ * @brief	:	help function south_leds(4), navigating even closer to determine and modifying specific led bit of a TRAFFIC_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void south_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:
@@ -327,6 +400,13 @@ void south_traffic_light(led_registers_t* leds, light_color_t color, led_state_t
 			break;
 	}
 }
+/**
+ * @brief	:	help function east_leds(4), navigating even closer to determine and modifying specific led bit of a TRAFFIC_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void east_traffic_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:
@@ -381,7 +461,13 @@ void east_traffic_light(led_registers_t* leds, light_color_t color, led_state_t 
 			break;
 	}
 }
-
+/**
+ * @brief	:	help function north_leds(4), navigating even closer to determine and modifying specific led bit of a PEDESTRIAN_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void north_pedestrian_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:
@@ -436,6 +522,13 @@ void north_pedestrian_light(led_registers_t* leds, light_color_t color, led_stat
 			break;
 	}
 }
+/**
+ * @brief	:	help function west_leds(4), navigating even closer to determine and modifying specific led bit of a PEDESTRIAN_LIGHT in a specified led state
+ * @return	:	void
+ * @param	: 	led_registers_t* leds, pointer to led state to be modified
+ * 				light_color_t color, color of led to be modified RED, YELLOW, GREEN, ORANGE=YELLOW for traffic type TRAFFIC_LIGHT, RED, GREEN, INDICATOR for PEDESTRIAN_LIGHT
+ * 				led_state_t led_state, state to set specific led to, ON, OFF or TOGGLE (will flip specific bit)
+ */
 void west_pedestrian_light(led_registers_t* leds, light_color_t color, led_state_t led_state){
 	switch (color){
 		case RED:

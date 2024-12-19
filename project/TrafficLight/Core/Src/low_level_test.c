@@ -7,12 +7,11 @@
 #include "low_level_test.h"
 
 /**
- * @brief	:	main test function for the low level functionality
+ * @brief	:	main test function for the low level and abstraction layer functionality
  * @param	:	void
  * @return	:	void
  */
 void test_low_level(void){
-
 /*actual low level tests*/
 //	SR_test();
 //	PB_test();
@@ -22,10 +21,7 @@ void test_low_level(void){
 //	set_led_test();
 //	check_car_test();
 	toggle_led_test();
-
-
 }
-
 
 /**
  * @brief : function for testing the "toggle" functionality of set_led() function by toggling each led in turn

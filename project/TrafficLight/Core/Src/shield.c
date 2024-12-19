@@ -1,3 +1,8 @@
+/**
+ * @author : Adam Strömbom
+ * @brief : functions interfacing directly with the HAL library 
+*/
+
 
 #include "shield.h"
 
@@ -44,11 +49,10 @@ void SR_Init(void){
 }
 
 
-
-
-
 ///**
-// * @brief: redefinition of callback for external interrupt
+// * @brief: initial redefinition of callback for external interrupt, later overwritten within freertos.c
+// * @param: uint16_t GPIO_Pin, which gpio pin is responsible for invoking the interrupt
+// * @return: void
 // */
 //void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 //

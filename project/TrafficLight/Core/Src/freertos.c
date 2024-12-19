@@ -208,9 +208,10 @@ void StartDefaultTask(void *argument)
 
 /* USER CODE BEGIN Header_PollSwitchesTask */
 /**
-* @brief Function implementing the pollSwitchesTas thread.
-* @param argument: Not used
-* @retval None
+* @brief 	Function implementing the pollSwitchesTas thread. At regualr intervals, poll car switches and modify traffic state accordingly
+* 			also check for messages in message buffer from ISR and modify traffic state to indicate pedestrian presence
+* @param 	argument: Not used
+* @retval 	None
 */
 /* USER CODE END Header_PollSwitchesTask */
 void PollSwitchesTask(void *argument)
@@ -262,7 +263,7 @@ void PollSwitchesTask(void *argument)
 
 /* USER CODE BEGIN Header_UpdateLedsTask */
 /**
-* @brief Function implementing the updateLedsTask thread.
+* @brief Function implementing the updateLedsTask thread. Periodically send state of led over SPI to shift registers
 * @param argument: Not used
 * @retval None
 */
@@ -292,7 +293,7 @@ void UpdateLedsTask(void *argument)
 
 /* USER CODE BEGIN Header_LogicTask */
 /**
-* @brief Function implementing the logicTask thread.
+* @brief Function implementing the logicTask thread. Handles actual logic of the junction by invoking different logic functions for each project task (currently just task1 implenmented)
 * @param argument: Not used
 * @retval None
 */
@@ -305,6 +306,7 @@ void LogicTask(void *argument)
 	const TickType_t xPeriod = pdMS_TO_TICKS(20);
 	xLastWakeTime = xTaskGetTickCount();
 
+	//initialize state for state machine
 	state = START;
 	nextState = START;
 
@@ -321,7 +323,7 @@ void LogicTask(void *argument)
 
 /* USER CODE BEGIN Header_BlinkNorthTask */
 /**
-* @brief Function implementing the blinkNorthTask thread.
+* @brief Function implementing the blinkNorthTask thread. Blinks the north pedestrian indicator led with a period of toggleFreq [ms] as long as the corresponding flag is true
 * @param argument: Not used
 * @retval None
 */
@@ -362,6 +364,8 @@ void BlinkNorthTask(void *argument)
 
 /**
  * @brief : function containing the state machine used to handle the logic of task 1
+ * @param : void
+ * @return : void
  */
 void task1_logic(void){
 
@@ -489,7 +493,11 @@ void task1_logic(void){
 }
 
 
-
+/**
+ * @brief 	:	function for initial testing(/playing around) with previously implemented modules
+ * @param	:	void
+ * @return	:	void
+ */
 void test_logic(void){
 	traffic_state_t temp_traffic;
 
@@ -556,6 +564,8 @@ void test_logic(void){
 
 /**
  * @brief: redefinition of callback for external interrupt
+ * @param: uint16_t GPIO_Pin, pin identifier of pin invoking the interrupt
+ * @return: void
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	uint8_t message[1];
@@ -563,7 +573,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 	switch( GPIO_Pin ){
 		case PL1_Switch_Pin:
-			HAL_GPIO_TogglePin(USR_LED1_GPIO_Port, USR_LED1_Pin);
+			//HAL_GPIO_TogglePin(USR_LED1_GPIO_Port, USR_LED1_Pin);
 
 			if( xMessageBufferIsEmpty( message_pedestrian_west ) == pdTRUE ){
 				xMessageBufferSendFromISR( message_pedestrian_west, message, 1 , NULL);
@@ -571,7 +581,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 			break;
 		case PL2_Switch_Pin:
-			HAL_GPIO_TogglePin(USR_LED2_GPIO_Port, USR_LED2_Pin);
+			//HAL_GPIO_TogglePin(USR_LED2_GPIO_Port, USR_LED2_Pin);
 
 			if( xMessageBufferIsEmpty( message_pedestrian_north ) == pdTRUE ){
 				xMessageBufferSendFromISR( message_pedestrian_north, message, 1 , NULL);

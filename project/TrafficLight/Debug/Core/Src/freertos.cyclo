@@ -1,9 +1,9 @@
 ../Core/Src/freertos.c:134:6:MX_FREERTOS_Init	1
 ../Core/Src/freertos.c:198:6:StartDefaultTask	1
-../Core/Src/freertos.c:216:6:PollSwitchesTask	4
-../Core/Src/freertos.c:270:6:UpdateLedsTask	2
-../Core/Src/freertos.c:300:6:LogicTask	1
-../Core/Src/freertos.c:329:6:BlinkNorthTask	4
-../Core/Src/freertos.c:366:6:task1_logic	16
-../Core/Src/freertos.c:493:6:test_logic	10
-../Core/Src/freertos.c:560:6:HAL_GPIO_EXTI_Callback	5
+../Core/Src/freertos.c:217:6:PollSwitchesTask	4
+../Core/Src/freertos.c:271:6:UpdateLedsTask	2
+../Core/Src/freertos.c:301:6:LogicTask	1
+../Core/Src/freertos.c:331:6:BlinkNorthTask	4
+../Core/Src/freertos.c:370:6:task1_logic	16
+../Core/Src/freertos.c:501:6:test_logic	10
+../Core/Src/freertos.c:570:6:HAL_GPIO_EXTI_Callback	5

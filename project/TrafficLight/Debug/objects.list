@@ -2,7 +2,6 @@
 "./Core/Src/gpio.o"
 "./Core/Src/low_level_test.o"
 "./Core/Src/main.o"
-"./Core/Src/project_tasks.o"
 "./Core/Src/shield.o"
 "./Core/Src/shield_abstraction.o"
 "./Core/Src/spi.o"

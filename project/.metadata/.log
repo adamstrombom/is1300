@@ -410,3 +410,18 @@ C Model Exception: C Model Status [Element freertos.c does not exist.]
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:207)
 !SUBENTRY 1 org.eclipse.cdt.core 4 969 2024-12-13 16:24:10.759
 !MESSAGE Element freertos.c does not exist.
+!SESSION 2024-12-19 17:16:08.470 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-12-19 17:16:34.981
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-12-19 17:16:34.982
+!MESSAGE Log4j2 initialized with config file /home/adam/kth/is1300/project/.metadata/.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-12-19 17:16:48.273
+!MESSAGE Started RMI Server, listening on port 41337

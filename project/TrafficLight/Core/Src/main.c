@@ -99,7 +99,8 @@ int main(void)
   SR_Init(); //initialize shift registers (probably unnecessary)
 
 
-//  test_low_level(); //run tests
+//  test_low_level(); //omment in/out to run tests
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
